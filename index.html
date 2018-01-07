@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>String MD5</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="js/md5.min.js"></script>
+</head>
+<style>
+  #app {padding-top: 100px;}
+  .input-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  .output-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  button {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 10px 20px;
+  }
+  .history {
+    display: flex;
+    justify-content: center;
+  }
+  .history li {
+    list-style: none;
+  }
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+  }
+  .history-item .source {
+    margin-right: 100px;
+  }
+</style>
+<body>
+  <div id="app">
+    <div class="converter">
+      <div class="input-wrapper">
+        <p class="label">String to convert</p>
+        <input type="text" v-model="stringToHash" />
+      </div>
+      <div class="output-wrapper">
+        <p>MD5 Hash: {{hashStringToMD5(stringToHash)}}</p>
+      </div>
+      <button @click="saveHistory(stringToHash, hashStringToMD5(stringToHash))" class="save-history">Save</button>
+    </div>
+    <div class="history">
+      <p>History</p>
+      <ul v-if="history.length">
+        <li v-for="(item, index) in history">
+          <div class="history-item">
+            <div class="source">{{item.key}}</div>
+            <div class="hash">{{item.value}}</div>
+            <button @click="clearOneHistory(index)">Clear this</button>
+          </div>
+        </li>
+        <button @click="clearAll()">Clear all</button>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        stringToHash: '',
+        history: JSON.parse(localStorage.getItem('history')),
+      },
+      methods: {
+        hashStringToMD5: function (stringToHash) {
+          return md5(stringToHash)
+        },
+        saveHistory: function(key, value) {
+          console.log(typeof (this.history))
+          if (!this.history) {
+            this.history = []
+          }
+          this.history.push({
+            'key': key,
+            'value': value
+          })
+          localStorage.setItem('history', JSON.stringify(this.history))
+        },
+        clearOneHistory: function(index) {
+          this.history.splice(index, 1);
+          localStorage.setItem('history', JSON.stringify(this.history))
+        },
+        clearAll: function() {
+          this.history = []
+          localStorage.setItem('history', JSON.stringify(this.history))
+        }
+      }
+    })
+  </script>
+</body>
+</html>
