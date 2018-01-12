@@ -10,8 +10,9 @@
   .input-wrapper {
     display: flex;
     justify-content: center;
+    flex-direction: column;
   }
-  .output-wrapper {
+  .output-wrapper, .button-wrapper {
     display: flex;
     justify-content: center;
   }
@@ -40,12 +41,16 @@
     <div class="converter">
       <div class="input-wrapper">
         <p class="label">String to convert</p>
-        <input type="text" v-model="stringToHash" />
+        <textarea name="string-to-hash" v-model="stringToHash" rows="10">
+          {{ stringToHash }}
+        </textarea>
       </div>
       <div class="output-wrapper">
         <p>MD5 Hash: {{hashStringToMD5(stringToHash)}}</p>
       </div>
-      <button @click="saveHistory(stringToHash, hashStringToMD5(stringToHash))" class="save-history">Save</button>
+      <div class="button-wrapper">
+        <button @click="saveHistory(stringToHash, hashStringToMD5(stringToHash))" class="save-history">Save</button>
+      </div>
     </div>
     <div class="history">
       <p>History</p>
@@ -57,8 +62,10 @@
             <button @click="clearOneHistory(index)">Clear this</button>
           </div>
         </li>
-        <button @click="clearAll()">Clear all</button>
       </ul>
+    </div>
+    <div class="button-wrapper">
+      <button @click="clearAll()">Clear all</button>
     </div>
   </div>
 
